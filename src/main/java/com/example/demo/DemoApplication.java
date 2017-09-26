@@ -6,6 +6,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,6 +54,22 @@ class ReservationController {
 	@RequestMapping("reservations")
 	private Collection<Reservation> reservations() {
 		return reservationRepository.findAll();
+	}
+}
+
+@Controller
+class ReservationWebController {
+	private ReservationRepository reservationRepository;
+
+	public ReservationWebController(ReservationRepository reservationRepository) {
+		this.reservationRepository = reservationRepository;
+	}
+
+	@GetMapping("web.reservations")
+	public String reservations(Model model) {
+		model.addAttribute("reservations", reservationRepository.findAll());
+
+		return "reservations";
 	}
 }
 
